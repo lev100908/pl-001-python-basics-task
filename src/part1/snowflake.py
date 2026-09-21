@@ -21,6 +21,9 @@ from .constants import (  # noqa: F401
     NODE_ID_MAX,
     SEQUENCE_ID_MAX,
     TIMESTAMP_MS_MAX,
+    SEQUENCE_ID_BITS,
+    NODE_SHIFT,
+    TIMESTAMP_SHIFT
 )
 
 
@@ -50,8 +53,8 @@ def decode_timestamp_ms(snowflake_id: int, epoch_ms: int = EPOCH_MS_DEFAULT) -> 
         The absolute Unix time in milliseconds at which the identifier was
         generated.
     """
-    # TODO: реализуйте функцию
-    return 0
+    current_millis = snowflake_id >> TIMESTAMP_SHIFT
+    return epoch_ms + current_millis
 
 
 def decode_node_id(snowflake_id: int) -> int:

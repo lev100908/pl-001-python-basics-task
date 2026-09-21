@@ -36,3 +36,7 @@ SEQUENCE_ID_MAX: Final[int] = 1 << SEQUENCE_ID_BITS - 1
 
 # Здесь можно добавить собственные вспомогательные константы
 # (например, сдвиги полей при сборке идентификатора).
+
+SEQUENCE_SHIFT = 0
+NODE_SHIFT = SEQUENCE_ID_BITS
+TIMESTAMP_SHIFT = SEQUENCE_ID_BITS + NODE_ID_BITS
