@@ -23,6 +23,7 @@ from .constants import (  # noqa: F401
     TIMESTAMP_MS_MAX,
     SEQUENCE_ID_BITS,
     NODE_SHIFT,
+    SEQUENCE_SHIFT,
     TIMESTAMP_SHIFT
 )
 
@@ -67,8 +68,7 @@ def decode_node_id(snowflake_id: int) -> int:
         The node identifier packed into ``snowflake_id``, in the range
         ``[0, NODE_ID_MAX]``.
     """
-    # TODO: реализуйте функцию
-    return 0
+    return snowflake_id >> NODE_SHIFT & NODE_ID_MAX
 
 
 def decode_sequence_id(snowflake_id: int) -> int:
@@ -81,8 +81,7 @@ def decode_sequence_id(snowflake_id: int) -> int:
         The per-millisecond sequence counter packed into ``snowflake_id``, in
         the range ``[0, SEQUENCE_ID_MAX]``.
     """
-    # TODO: реализуйте функцию
-    return 0
+    return snowflake_id >> SEQUENCE_SHIFT & SEQUENCE_ID_MAX
 
 
 def generate_snowflake_id(
