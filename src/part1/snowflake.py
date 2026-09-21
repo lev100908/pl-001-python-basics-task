@@ -112,5 +112,20 @@ def generate_snowflake_id(
         timestamp field (roughly 69 years after ``epoch_ms``). In each of those
         cases an explanatory message is printed to stdout first.
     """
-    # TODO: реализуйте функцию
-    return 0
+    if node_id > NODE_ID_MAX or node_id < 0:
+        print(f"node_id must be in [0, {NODE_ID_MAX}], got {node_id}")
+        return None
+
+    if sequence_id > SEQUENCE_ID_MAX or sequence_id < 0:
+        print(f"sequence_id  must be in [0, {SEQUENCE_ID_MAX}], got {sequence_id}")
+        return None
+
+    current_millis = read_current_millis(epoch_ms)
+
+    if current_millis > TIMESTAMP_MS_MAX:
+        print("overflows")
+        return None
+
+    snowflake_id = current_millis << TIMESTAMP_SHIFT | node_id << NODE_SHIFT | sequence_id << SEQUENCE_SHIFT
+
+    return snowflake_id
