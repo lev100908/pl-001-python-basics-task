@@ -34,7 +34,7 @@ def read_current_millis(epoch_ms: int) -> int:
         The count of whole milliseconds between ``epoch_ms`` and now. May be
         negative if ``epoch_ms`` lies in the future.
     """
-    now_ms = time.time() * 1_000
+    now_ms = time.time_ns() // 1_000_000
     return now_ms - epoch_ms
 
 
