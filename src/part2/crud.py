@@ -150,5 +150,10 @@ def delete_product(storage: list[Product], product_id: int) -> int | None:
         product carried that identifier (``storage`` is left unchanged and
         a message is printed).
     """
-    # TODO: реализуйте функцию
-    return 0
+    for i, product in enumerate(storage):
+        if product[PRODUCT_ID_INDEX] == product_id:
+            storage = storage[:i] + storage[i+1:]
+            return product_id
+
+    print(f"no product with id {product_id}")
+    return None
