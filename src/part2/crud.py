@@ -120,8 +120,21 @@ def update_product(
         ``None`` when no product carries that identifier (``storage`` is
         left unchanged and a message is printed).
     """
-    # TODO: реализуйте функцию
-    return (0, "", Decimal(0), 0)
+    name, price, quantity = fields
+
+    for i, product in enumerate(storage):
+        if product[PRODUCT_ID_INDEX] == product_id:
+            updated_product = (
+                product_id,
+                name,
+                normalize_price(price),
+                quantity
+            )
+            storage[i] = updated_product
+            return updated_product
+
+    print(f"no product with id {product_id}")
+    return None
 
 
 def delete_product(storage: list[Product], product_id: int) -> int | None:
