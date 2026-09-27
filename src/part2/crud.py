@@ -89,8 +89,12 @@ def read_product(storage: list[Product], product_id: int) -> Product | None:
         ``None`` when no product carries that identifier (a message is
         printed in that case).
     """
-    # TODO: реализуйте функцию
-    return (0, "", Decimal(0), 0)
+    for product in storage:
+        if product[PRODUCT_ID_INDEX] == product_id:
+            return product
+
+    print(f"no product with id {product_id}")
+    return None
 
 
 def update_product(
