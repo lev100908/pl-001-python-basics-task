@@ -115,17 +115,15 @@ def add_to_cart(
         )
     )
 
+    index_cart_line = find_cart_line(cart, product_id)
+
+    if index_cart_line:
+        return change_cart_quantity(cart, index_cart_line, quantity)
+
     updated_cart_line = (
         product_id,
+        quantity
     )
-
-    for i, cart_line in enumerate(cart):
-        if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
-            updated_cart_line += (cart_line[LINE_QUANTITY_INDEX] + quantity, )
-            cart[i] = updated_cart_line
-            return updated_cart_line
-
-    updated_cart_line += (quantity, )
 
     cart.append(updated_cart_line)
 
