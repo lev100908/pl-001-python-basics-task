@@ -11,8 +11,8 @@ an explanatory message to stdout and returns ``None``.
 
 from typing import Final
 
-from .crud import read_product, update_product  # noqa: F401
-from .storage import (  # noqa: F401
+from .crud import read_product, update_product
+from .storage import (
     NAME_INDEX,
     PRICE_INDEX,
     QUANTITY_INDEX,
@@ -22,9 +22,8 @@ from .storage import (  # noqa: F401
 
 type CartLine = tuple[int, int]
 
-# TODO: задайте позиции полей внутри кортежа CartLine
 LINE_PRODUCT_ID_INDEX: Final = 0
-LINE_QUANTITY_INDEX: Final = 0
+LINE_QUANTITY_INDEX: Final = 1
 
 
 def add_to_cart(
@@ -53,8 +52,42 @@ def add_to_cart(
         The cart line for ``product_id`` after the addition, or ``None``
         when the product is unknown or the store cannot cover the request.
     """
-    # TODO: реализуйте функцию
-    return (0, 0)
+    search_product = read_product(storage, product_id)
+
+    if not search_product:
+        return None
+
+    if quantity > search_product[QUANTITY_INDEX]:
+        print(
+            f"not enough stock for product {product_id}: {search_product[QUANTITY_INDEX]} available, {quantity} requested"
+        )
+        return None
+
+    update_product(
+        storage, 
+        product_id, 
+        (
+            search_product[NAME_INDEX],
+            search_product[PRICE_INDEX],
+            search_product[QUANTITY_INDEX] - quantity
+        )
+    )
+
+    updated_cartline = (
+        product_id,
+    )
+
+    for i, cartline in enumerate(cart):
+        if cartline[LINE_PRODUCT_ID_INDEX] == product_id:
+            updated_cartline += (cartline[LINE_QUANTITY_INDEX] + quantity, )
+            cart[i] = updated_cartline
+            return updated_cartline
+
+    updated_cartline += (quantity, )
+
+    cart.append(updated_cartline)
+
+    return updated_cartline
 
 
 def remove_from_cart(
