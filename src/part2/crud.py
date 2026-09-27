@@ -58,8 +58,23 @@ def create_product(
         ``storage`` is left unchanged and a message naming the clashing
         name is printed.
     """
-    # TODO: реализуйте функцию
-    return 0
+    name, price, quantity = fields
+    product_names = [product[NAME_INDEX] for product in storage]
+
+    if name in product_names:
+        print(f"product name {name} is already taken.")
+        return None
+
+    product_id = generate_product_id(storage)
+
+    storage.append((
+        product_id, 
+        name, 
+        normalize_price(price), 
+        quantity
+    ))
+
+    return product_id
 
 
 def read_product(storage: list[Product], product_id: int) -> Product | None:
