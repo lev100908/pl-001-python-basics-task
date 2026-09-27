@@ -73,21 +73,21 @@ def add_to_cart(
         )
     )
 
-    updated_cartline = (
+    updated_cart_line = (
         product_id,
     )
 
     for i, cart_line in enumerate(cart):
         if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
-            updated_cartline += (cart_line[LINE_QUANTITY_INDEX] + quantity, )
-            cart[i] = updated_cartline
-            return updated_cartline
+            updated_cart_line += (cart_line[LINE_QUANTITY_INDEX] + quantity, )
+            cart[i] = updated_cart_line
+            return updated_cart_line
 
-    updated_cartline += (quantity, )
+    updated_cart_line += (quantity, )
 
-    cart.append(updated_cartline)
+    cart.append(updated_cart_line)
 
-    return updated_cartline
+    return updated_cart_line
 
 
 def remove_from_cart(
