@@ -77,9 +77,9 @@ def add_to_cart(
         product_id,
     )
 
-    for i, cartline in enumerate(cart):
-        if cartline[LINE_PRODUCT_ID_INDEX] == product_id:
-            updated_cartline += (cartline[LINE_QUANTITY_INDEX] + quantity, )
+    for i, cart_line in enumerate(cart):
+        if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
+            updated_cartline += (cart_line[LINE_QUANTITY_INDEX] + quantity, )
             cart[i] = updated_cartline
             return updated_cartline
 
@@ -120,3 +120,27 @@ def remove_from_cart(
     """
     # TODO: реализуйте функцию
     return (0, 0)
+
+def find_cart_line(
+    cart: list[CartLine],
+    product_id: int,
+) -> bool:
+    """Check cart for cart line.
+    
+    The cart line for ``product_id`` is looked up. If there is none, return False 
+    else return True.
+
+    Args:
+
+        cart: The cart to take the units from; modified in place on
+            success.
+        product_id: The identifier of the product to remove.
+
+    Returns:
+        True if cart line was found in cart, or False
+    """
+
+    for cart_line in cart:
+        if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
+            return True
+    return False
