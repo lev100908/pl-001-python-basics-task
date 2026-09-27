@@ -51,7 +51,7 @@ def change_cart_quantity(
     cart: list[CartLine],
     index: int,
     quantity: int,
-) -> CartLine:
+) -> CartLine | None:
     """Change cart quantity in cart line at ``index`` to ``quantity``.
     
     Args:
@@ -62,11 +62,18 @@ def change_cart_quantity(
 
     Returns:
         The cart line for ``product_id`` after the changing quantity.
+        None if quantity = 0.
     """
 
-    updated_cart_line = (cart[index][LINE_PRODUCT_ID_INDEX], quantity)
-    cart[index] = updated_cart_line
-    return updated_cart_line
+    
+    if quantity:
+        updated_cart_line = (cart[index][LINE_PRODUCT_ID_INDEX], quantity)
+        cart[index] = updated_cart_line
+        return updated_cart_line
+    
+    cart[index] = cart[:index] + cart[index+1:]
+    return None
+
 
 def add_to_cart(
     storage: list[Product],
@@ -117,8 +124,11 @@ def add_to_cart(
 
     index_cart_line = find_cart_line(cart, product_id)
 
-    if index_cart_line:
-        return change_cart_quantity(cart, index_cart_line, quantity)
+    if not index_cart_line is None:
+        return change_cart_quantity(
+            cart, 
+            index_cart_line, 
+            cart[index_cart_line][QUANTITY_INDEX] + quantity)
 
     updated_cart_line = (
         product_id,
@@ -158,5 +168,34 @@ def remove_from_cart(
         zero means the line was dropped), or ``None`` when the cart has no
         line for the product or holds too few units.
     """
-    # TODO: реализуйте функцию
-    return (0, 0)
+    index_cart_line = find_cart_line(cart, product_id)
+
+    if index_cart_line is None: 
+        print(
+            f"product {product_id} is not in the cart"
+        )
+        return None
+    
+    cart_line_quantity = cart[index_cart_line][LINE_QUANTITY_INDEX]
+    if cart_line_quantity < quantity:
+        print(
+            f"cart holds only {cart_line_quantity} unit(s) of product {product_id}, cannot remove {quantity}"
+        )
+        return None
+
+    search_product = read_product(storage, product_id)
+
+    if not search_product:
+        return None
+
+    update_product(
+        storage, 
+        product_id, 
+        (
+            search_product[NAME_INDEX],
+            search_product[PRICE_INDEX],
+            search_product[QUANTITY_INDEX] + quantity
+        )
+    )
+
+    return change_cart_quantity(cart, index_cart_line, cart_line_quantity - quantity)
