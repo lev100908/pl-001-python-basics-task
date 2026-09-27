@@ -25,6 +25,48 @@ type CartLine = tuple[int, int]
 LINE_PRODUCT_ID_INDEX: Final = 0
 LINE_QUANTITY_INDEX: Final = 1
 
+def find_cart_line(
+    cart: list[CartLine],
+    product_id: int,
+) -> int | None:
+    """Check cart for cart line.
+    
+    The cart line for ``product_id`` is looked up. If there is none, return None 
+    else return index of required cart line in cart.
+
+    Args:
+        cart: The cart to take the units from; modified in place on
+            success.
+        product_id: The identifier of the product to remove.
+
+    Returns:
+        True if cart line was found in cart, or False
+    """
+    for i, cart_line in enumerate(cart):
+            if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
+                return i
+    return None
+
+def change_cart_quantity(
+    cart: list[CartLine],
+    index: int,
+    quantity: int,
+) -> CartLine:
+    """Change cart quantity in cart line at ``index`` to ``quantity``.
+    
+    Args:
+        cart: The cart to take the units from; modified in place on
+            success.
+        index: The index of cart line in cart (as index of list).
+        quantity: Number of units.
+
+    Returns:
+        The cart line for ``product_id`` after the changing quantity.
+    """
+
+    updated_cart_line = (cart[index][LINE_PRODUCT_ID_INDEX], quantity)
+    cart[index] = updated_cart_line
+    return updated_cart_line
 
 def add_to_cart(
     storage: list[Product],
@@ -120,46 +162,3 @@ def remove_from_cart(
     """
     # TODO: реализуйте функцию
     return (0, 0)
-
-def find_cart_line(
-    cart: list[CartLine],
-    product_id: int,
-) -> int | None:
-    """Check cart for cart line.
-    
-    The cart line for ``product_id`` is looked up. If there is none, return None 
-    else return index of required cart line in cart.
-
-    Args:
-        cart: The cart to take the units from; modified in place on
-            success.
-        product_id: The identifier of the product to remove.
-
-    Returns:
-        True if cart line was found in cart, or False
-    """
-    for i, cart_line in enumerate(cart):
-            if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
-                return i
-    return None
-
-def change_cart_quantity(
-    cart: list[CartLine],
-    index: int,
-    quantity: int,
-) -> CartLine:
-    """Change cart quantity in cart line at ``index`` to ``quantity``.
-    
-    Args:
-        cart: The cart to take the units from; modified in place on
-            success.
-        index: The index of cart line in cart (as index of list).
-        quantity: Number of units.
-
-    Returns:
-        The cart line for ``product_id`` after the changing quantity.
-    """
-
-    updated_cart_line = (cart[index][LINE_PRODUCT_ID_INDEX], quantity)
-    cart[index] = updated_cart_line
-    return updated_cart_line
