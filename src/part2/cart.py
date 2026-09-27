@@ -71,7 +71,7 @@ def change_cart_quantity(
         cart[index] = updated_cart_line
         return updated_cart_line
     
-    cart[index] = cart[:index] + cart[index+1:]
+    cart = cart[:index] + cart[index+1:]
     return None
 
 
@@ -128,7 +128,7 @@ def add_to_cart(
         return change_cart_quantity(
             cart, 
             index_cart_line, 
-            cart[index_cart_line][QUANTITY_INDEX] + quantity)
+            cart[index_cart_line][LINE_QUANTITY_INDEX] + quantity)
 
     updated_cart_line = (
         product_id,
