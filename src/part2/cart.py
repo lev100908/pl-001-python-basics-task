@@ -25,13 +25,14 @@ type CartLine = tuple[int, int]
 LINE_PRODUCT_ID_INDEX: Final = 0
 LINE_QUANTITY_INDEX: Final = 1
 
+
 def find_cart_line(
     cart: list[CartLine],
     product_id: int,
 ) -> int | None:
     """Check cart for cart line.
-    
-    The cart line for ``product_id`` is looked up. If there is none, return None 
+
+    The cart line for ``product_id`` is looked up. If there is none, return None
     else return index of required cart line in cart.
 
     Args:
@@ -43,9 +44,10 @@ def find_cart_line(
         True if cart line was found in cart, or False
     """
     for i, cart_line in enumerate(cart):
-            if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
-                return i
+        if cart_line[LINE_PRODUCT_ID_INDEX] == product_id:
+            return i
     return None
+
 
 def change_cart_quantity(
     cart: list[CartLine],
@@ -53,7 +55,7 @@ def change_cart_quantity(
     quantity: int,
 ) -> CartLine | None:
     """Change cart quantity in cart line at ``index`` to ``quantity``.
-    
+
     Args:
         cart: The cart to take the units from; modified in place on
             success.
@@ -65,13 +67,12 @@ def change_cart_quantity(
         None if quantity = 0.
     """
 
-    
     if quantity:
         updated_cart_line = (cart[index][LINE_PRODUCT_ID_INDEX], quantity)
         cart[index] = updated_cart_line
         return updated_cart_line
-    
-    cart = cart[:index] + cart[index+1:]
+
+    cart = cart[:index] + cart[index + 1 :]
     return None
 
 
@@ -113,27 +114,23 @@ def add_to_cart(
         return None
 
     update_product(
-        storage, 
-        product_id, 
+        storage,
+        product_id,
         (
             search_product[NAME_INDEX],
             search_product[PRICE_INDEX],
-            search_product[QUANTITY_INDEX] - quantity
-        )
+            search_product[QUANTITY_INDEX] - quantity,
+        ),
     )
 
     index_cart_line = find_cart_line(cart, product_id)
 
     if not index_cart_line is None:
         return change_cart_quantity(
-            cart, 
-            index_cart_line, 
-            cart[index_cart_line][LINE_QUANTITY_INDEX] + quantity)
+            cart, index_cart_line, cart[index_cart_line][LINE_QUANTITY_INDEX] + quantity
+        )
 
-    updated_cart_line = (
-        product_id,
-        quantity
-    )
+    updated_cart_line = (product_id, quantity)
 
     cart.append(updated_cart_line)
 
@@ -170,12 +167,10 @@ def remove_from_cart(
     """
     index_cart_line = find_cart_line(cart, product_id)
 
-    if index_cart_line is None: 
-        print(
-            f"product {product_id} is not in the cart"
-        )
+    if index_cart_line is None:
+        print(f"product {product_id} is not in the cart")
         return None
-    
+
     cart_line_quantity = cart[index_cart_line][LINE_QUANTITY_INDEX]
     if cart_line_quantity < quantity:
         print(
@@ -189,13 +184,13 @@ def remove_from_cart(
         return None
 
     update_product(
-        storage, 
-        product_id, 
+        storage,
+        product_id,
         (
             search_product[NAME_INDEX],
             search_product[PRICE_INDEX],
-            search_product[QUANTITY_INDEX] + quantity
-        )
+            search_product[QUANTITY_INDEX] + quantity,
+        ),
     )
 
     return change_cart_quantity(cart, index_cart_line, cart_line_quantity - quantity)

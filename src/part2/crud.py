@@ -67,12 +67,7 @@ def create_product(
 
     product_id = generate_product_id(storage)
 
-    storage.append((
-        product_id, 
-        name, 
-        normalize_price(price), 
-        quantity
-    ))
+    storage.append((product_id, name, normalize_price(price), quantity))
 
     return product_id
 
@@ -124,12 +119,7 @@ def update_product(
 
     for i, product in enumerate(storage):
         if product[PRODUCT_ID_INDEX] == product_id:
-            updated_product = (
-                product_id,
-                name,
-                normalize_price(price),
-                quantity
-            )
+            updated_product = (product_id, name, normalize_price(price), quantity)
             storage[i] = updated_product
             return updated_product
 
@@ -152,7 +142,7 @@ def delete_product(storage: list[Product], product_id: int) -> int | None:
     """
     for i, product in enumerate(storage):
         if product[PRODUCT_ID_INDEX] == product_id:
-            storage = storage[:i] + storage[i+1:]
+            storage = storage[:i] + storage[i + 1 :]
             return product_id
 
     print(f"no product with id {product_id}")
