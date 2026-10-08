@@ -22,7 +22,7 @@ from decimal import ROUND_HALF_UP, Decimal
 import re
 from typing import Final
 
-from storage import NAME_INDEX, PRICE_INDEX, PRODUCT_ID_INDEX, QUANTITY_INDEX, Product
+from .storage import NAME_INDEX, PRICE_INDEX, PRODUCT_ID_INDEX, QUANTITY_INDEX, Product
 
 
 # Number of fractional digits every stored price is rounded to.

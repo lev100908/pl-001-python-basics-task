@@ -75,7 +75,8 @@ def print_result(result: object) -> None:
             operation already reported its own failure, so nothing is
             printed in that case.
     """
-    # TODO: реализуйте функцию
+    if result:
+        print(result)
 
 
 def run_command(storage: list[Product], line: str) -> bool:
@@ -98,9 +99,30 @@ def run_command(storage: list[Product], line: str) -> bool:
         decimal.InvalidOperation: If the price argument of ``create`` or
             ``update`` does not parse as a decimal number.
     """
-    # TODO: реализуйте функцию
-    return False
-
+    match line.split():
+        case ["help"]:
+            show_help()
+            return True
+        case ["exit"]:
+            return False
+        case ["show"]:
+            print(get_storage_str_representation(storage))
+            return True
+        case ["create", *name, price, quantity]:
+            print_result(create_product(storage, (" ".join(name), Decimal(price), int(quantity))))
+            return True
+        case ["read", id]:
+            print_result(read_product(storage, int(id)))
+            return True
+        case ["update", id, *name, price, quantity]:
+            print_result(update_product(storage, int(id), (" ".join(name), Decimal(price), int(quantity))))
+            return True
+        case ["delete", id]:
+            print_result(delete_product(storage, int(id)))
+            return True
+        case _:
+            print(f"'{line}' is not a command")
+            return True
 
 def main() -> None:
     """Run the admin console until the ``exit`` command is entered.
