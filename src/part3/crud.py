@@ -68,15 +68,15 @@ def create_product(
     """
     name, price, quantity = fields
     product_names = [product[NAME_INDEX] for product in storage]
+
+    name = normalize_product_name(name)
     
     if not name:
         print("product name must not be blank")
         return None
 
-    name = normalize_product_name(name)
-
     if name in product_names:
-        print(f"product name {name} is already taken.")
+        print(f"product name '{name}' is already taken.")
         return None
 
     product_id = generate_product_id(storage)
@@ -133,17 +133,34 @@ def update_product(
         product to its own current name is allowed.
     """
     name, price, quantity = fields
+
     name = normalize_product_name(name)
+
+    if not name:
+        print("product name must not be blank")
+        return None
+
+    index_for_updating: int | None = None
+    fl_name_taken: bool = False
 
     for i, product in enumerate(storage):
         if product[PRODUCT_ID_INDEX] == product_id:
-            updated_product = (product_id, name, normalize_price(price), quantity)
-            storage[i] = updated_product
-            return updated_product
+            index_for_updating = i
+        elif product[NAME_INDEX] == name and product[PRODUCT_ID_INDEX] != product_id:
+            fl_name_taken = True
 
-    print(f"no product with id {product_id}")
-    return None
+    if index_for_updating is None:
+        print(f"no product with id {product_id}")
+        return None
 
+    if fl_name_taken:
+        print(f"product name '{name}' is already taken")
+        return None
+
+    updated_product = (product_id, name, normalize_price(price), quantity)
+    storage[index_for_updating] = updated_product
+
+    return updated_product
 
 
 def delete_product(storage: list[Product], product_id: int) -> int | None:
