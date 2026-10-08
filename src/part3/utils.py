@@ -18,11 +18,17 @@ Presentation:
   the longest value it holds in that particular call.
 """
 
-from decimal import ROUND_HALF_UP, Decimal
 import re
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Final
 
-from .storage import NAME_INDEX, PRICE_INDEX, PRODUCT_ID_INDEX, QUANTITY_INDEX, Product
+from .storage import (
+    NAME_INDEX,
+    PRICE_INDEX,
+    PRODUCT_ID_INDEX,
+    QUANTITY_INDEX,
+    Product,
+)
 
 
 # Number of fractional digits every stored price is rounded to.
@@ -63,15 +69,17 @@ def normalize_product_name(name: str) -> str:
         The result is an empty string when ``name`` holds nothing but
         whitespace.
     """
-    
+
     return re.sub(r"\s+", " ", name.strip().lower())
 
 
-def get_row_str_representation(values: list[list[Product]], row_index: int, lengths_columns: list[int]) -> str:
+def get_row_str_representation(
+    values: list[list[str]], row_index: int, lengths_columns: list[int]
+) -> str:
     """Render the row of table by index.
 
     Args:
-        values (list[list[Product]]): values 
+        values (list[list[Product]]): values
         row_index (int): index of row
         lengths_columns (list[int]): list of lengths of columns
 
@@ -79,11 +87,13 @@ def get_row_str_representation(values: list[list[Product]], row_index: int, leng
         str: string of the row of table by index
     """
     return (
-        f"| {f'{values[PRODUCT_ID_INDEX][row_index]}':<{lengths_columns[PRODUCT_ID_INDEX]}} |" + 
-        f" {f'{values[NAME_INDEX][row_index]}':<{lengths_columns[NAME_INDEX]}} |" +
-        f" {f'{values[PRICE_INDEX][row_index]}':<{lengths_columns[PRICE_INDEX]}} |" +
-        f" {f'{values[QUANTITY_INDEX][row_index]}':<{lengths_columns[QUANTITY_INDEX]}} |" + "\n"
+        f"| {f'{values[PRODUCT_ID_INDEX][row_index]}':<{lengths_columns[PRODUCT_ID_INDEX]}} |"
+        + f" {f'{values[NAME_INDEX][row_index]}':<{lengths_columns[NAME_INDEX]}} |"
+        + f" {f'{values[PRICE_INDEX][row_index]}':<{lengths_columns[PRICE_INDEX]}} |"
+        + f" {f'{values[QUANTITY_INDEX][row_index]}':<{lengths_columns[QUANTITY_INDEX]}} |"
+        + "\n"
     )
+
 
 def get_horizonal_line_str(lengths_columns: list[int]) -> str:
     """Render the dashed separator row.
@@ -96,11 +106,13 @@ def get_horizonal_line_str(lengths_columns: list[int]) -> str:
     """
 
     return (
-        f"|{'-' * (lengths_columns[PRODUCT_ID_INDEX] + 2)}|" + 
-        f"{'-' * (lengths_columns[NAME_INDEX] + 2)}|" +
-        f"{'-' * (lengths_columns[PRICE_INDEX] + 2)}|" +
-        f"{'-' * (lengths_columns[QUANTITY_INDEX] + 2)}|" + "\n"
+        f"|{'-' * (lengths_columns[PRODUCT_ID_INDEX] + 2)}|"
+        + f"{'-' * (lengths_columns[NAME_INDEX] + 2)}|"
+        + f"{'-' * (lengths_columns[PRICE_INDEX] + 2)}|"
+        + f"{'-' * (lengths_columns[QUANTITY_INDEX] + 2)}|"
+        + "\n"
     )
+
 
 def get_storage_str_representation(storage: list[Product]) -> str:
     """Render the product store as a text table with data-sized columns.
@@ -121,7 +133,7 @@ def get_storage_str_representation(storage: list[Product]) -> str:
         the header labels.
     """
     values_columns: list[list[str]] = [
-        [TABLE_HEADERS[PRODUCT_ID_INDEX]], 
+        [TABLE_HEADERS[PRODUCT_ID_INDEX]],
         [TABLE_HEADERS[NAME_INDEX]],
         [TABLE_HEADERS[PRICE_INDEX]],
         [TABLE_HEADERS[QUANTITY_INDEX]],
@@ -132,15 +144,17 @@ def get_storage_str_representation(storage: list[Product]) -> str:
         values_columns[PRICE_INDEX].append(str(product[PRICE_INDEX]))
         values_columns[QUANTITY_INDEX].append(str(product[QUANTITY_INDEX]))
 
-    lengths_colums: list[int] = [len(max(values_columns[PRODUCT_ID_INDEX], key=len)),
-                    len(max(values_columns[NAME_INDEX], key=len)),
-                    len(max(values_columns[PRICE_INDEX], key=len)),
-                    len(max(values_columns[QUANTITY_INDEX], key=len)),
+    lengths_colums: list[int] = [
+        len(max(values_columns[PRODUCT_ID_INDEX], key=len)),
+        len(max(values_columns[NAME_INDEX], key=len)),
+        len(max(values_columns[PRICE_INDEX], key=len)),
+        len(max(values_columns[QUANTITY_INDEX], key=len)),
     ]
 
-    output_string: str = get_row_str_representation(values_columns, 0, lengths_colums) + get_horizonal_line_str(lengths_colums)
+    output_string: str = get_row_str_representation(
+        values_columns, 0, lengths_colums
+    ) + get_horizonal_line_str(lengths_colums)
     for i in range(1, len(values_columns[0])):
         output_string += get_row_str_representation(values_columns, i, lengths_colums)
 
     return output_string
-

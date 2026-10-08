@@ -70,7 +70,7 @@ def create_product(
     product_names = [product[NAME_INDEX] for product in storage]
 
     name = normalize_product_name(name)
-    
+
     if not name:
         print("product name must not be blank")
         return None
