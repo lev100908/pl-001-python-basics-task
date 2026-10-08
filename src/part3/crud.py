@@ -68,10 +68,12 @@ def create_product(
     """
     name, price, quantity = fields
     product_names = [product[NAME_INDEX] for product in storage]
-
+    
     if not name:
         print("product name must not be blank")
         return None
+
+    name = normalize_product_name(name)
 
     if name in product_names:
         print(f"product name {name} is already taken.")
@@ -79,7 +81,7 @@ def create_product(
 
     product_id = generate_product_id(storage)
 
-    storage.append((product_id, normalize_product_name(name), normalize_price(price), quantity))
+    storage.append((product_id, name, normalize_price(price), quantity))
 
     return product_id
 
@@ -131,10 +133,11 @@ def update_product(
         product to its own current name is allowed.
     """
     name, price, quantity = fields
+    name = normalize_product_name(name)
 
     for i, product in enumerate(storage):
         if product[PRODUCT_ID_INDEX] == product_id:
-            updated_product = (product_id, normalize_product_name(name), normalize_price(price), quantity)
+            updated_product = (product_id, name, normalize_price(price), quantity)
             storage[i] = updated_product
             return updated_product
 
