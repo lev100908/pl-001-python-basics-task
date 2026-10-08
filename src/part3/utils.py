@@ -19,6 +19,7 @@ Presentation:
 """
 
 from decimal import ROUND_HALF_UP, Decimal
+import re
 from typing import Final
 
 from storage import Product
@@ -33,7 +34,7 @@ PRICE_STEP: Final = Decimal(1).scaleb(-PRICE_PRECISION)
 # left to right. The width of each column is not fixed here -- it is
 # measured per call from the data (see the function).
 # TODO: задайте заголовки столбцов таблицы
-TABLE_HEADERS: Final[tuple[str, ...]] = ()
+TABLE_HEADERS: Final[tuple[str, ...]] = ("ID", "name", "price", "quantity")
 
 
 def normalize_price(price: Decimal) -> Decimal:
@@ -63,8 +64,8 @@ def normalize_product_name(name: str) -> str:
         The result is an empty string when ``name`` holds nothing but
         whitespace.
     """
-    # TODO: реализуйте функцию
-    return ""
+    
+    return re.sub(r"\s+", " ", name.strip().lower())
 
 
 # TODO: при необходимости добавьте свои вспомогательные функции
