@@ -157,4 +157,4 @@ def get_storage_str_representation(storage: list[Product]) -> str:
     for i in range(1, len(values_columns[0])):
         output_string += get_row_str_representation(values_columns, i, lengths_colums)
 
-    return output_string
+    return output_string.removesuffix("\n")
