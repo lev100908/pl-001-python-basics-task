@@ -22,7 +22,7 @@ from decimal import ROUND_HALF_UP, Decimal  # noqa: F401
 import re
 from typing import Final
 
-from storage import (  # noqa: F401
+from .storage import (  # noqa: F401
     NAME_KEY,
     PRICE_KEY,
     QUANTITY_KEY,

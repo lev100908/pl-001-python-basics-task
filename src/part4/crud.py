@@ -41,8 +41,7 @@ def generate_product_id() -> str:
     Returns:
         A freshly generated UUID, stringified.
     """
-    # TODO: реализуйте функцию
-    return ""
+    return str(uuid.uuid4())
 
 
 def create_product(
@@ -73,8 +72,29 @@ def create_product(
         and ``product_names`` are left unchanged and an explanatory
         message is printed.
     """
-    # TODO: реализуйте функцию
-    return ""
+    name, price, quantity = fields
+
+    name = normalize_product_name(name)
+
+    if not name:
+        print("product name must not be blank")
+        return None
+
+    if name in product_names:
+        print(f"product name {name} is already taken")
+        return None
+
+    product_id = generate_product_id()
+
+    storage[product_id] = {
+        NAME_KEY : name,
+        PRICE_KEY : normalize_price(price),
+        QUANTITY_KEY : quantity
+    }
+
+    product_names.add(name)
+
+    return product_id
 
 
 def read_product(storage: dict[str, Product], product_id: str) -> Product | None:
