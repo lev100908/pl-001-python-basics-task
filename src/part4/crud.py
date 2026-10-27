@@ -72,7 +72,7 @@ def create_product(
         and ``product_names`` are left unchanged and an explanatory
         message is printed.
     """
-    name, price, quantity = fields
+    name, price, quantity = fields.values()
 
     name = normalize_product_name(name)
 
@@ -108,8 +108,10 @@ def read_product(storage: dict[str, Product], product_id: str) -> Product | None
         The matching product record, or ``None`` when no product carries
         that identifier (a message is printed in that case).
     """
-    # TODO: реализуйте функцию
-    return {}
+    if product_id not in storage:
+        print(f"no product with id {product_id}")
+        return None
+    return storage[product_id]
 
 
 def update_product(
@@ -149,8 +151,36 @@ def update_product(
         and an explanatory message is printed. Renaming a product to its
         own current name is allowed.
     """
-    # TODO: реализуйте функцию
-    return {}
+    if product_id not in storage:
+        print(f"no product with id {product_id}")
+        return None
+
+    product = storage[product_id]
+
+    if NAME_KEY in fields:
+        name = normalize_product_name(fields[NAME_KEY])
+        if not name:
+            print("product name must not be blank")
+            return None
+
+        old_name = product[NAME_KEY]
+
+        if name != old_name and name in product_names:
+            print(f"product name {name} is already taken")
+            return None
+
+        fields[NAME_KEY] = name
+
+        if old_name != name:
+            product_names.remove(old_name)
+            product_names.add(name)
+
+    if PRICE_KEY in fields:
+        fields[PRICE_KEY] = normalize_price(fields[PRICE_KEY])
+
+    product.update(fields)
+
+    return product
 
 
 def delete_product(
