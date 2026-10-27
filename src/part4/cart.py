@@ -9,7 +9,9 @@ Like the CRUD layer, the failure path never raises -- the operation prints
 an explanatory message to stdout and returns ``None``.
 """
 
-from .storage import Product
+from .storage import Product, QUANTITY_KEY
+
+from .crud import read_product, update_product
 
 
 # TODO: при необходимости добавьте свои вспомогательные функции
@@ -46,8 +48,26 @@ def add_to_cart(
         ``None`` when the product is unknown or the store cannot cover the
         request.
     """
-    # TODO: реализуйте функцию
-    return 0
+    searched_product = read_product(storage, product_id)
+
+    storage_quantity = searched_product[QUANTITY_KEY]
+
+    if storage_quantity < quantity:
+        print(f"not enough stock for product {product_id}: {storage_quantity} available, {quantity} requested")
+        return None
+
+    storage_quantity -= quantity
+
+    update_product(
+        storage,
+        product_names,
+        product_id,
+        {QUANTITY_KEY : storage_quantity}
+    )
+
+    cart[product_id] = cart.get(cart[product_id], 0) + quantity
+
+    return cart[product_id]
 
 
 def remove_from_cart(
@@ -83,5 +103,29 @@ def remove_from_cart(
         (zero means the product was dropped from the cart), or ``None`` when
         the cart does not hold the product or holds too few units.
     """
-    # TODO: реализуйте функцию
-    return 0
+
+    if product_id not in cart:
+        print(f"product {product_id} is not in the cart")
+
+    cart_quantity = cart[product_id]
+    
+    if cart_quantity < quantity:
+        print(f"cart holds only {cart_quantity} unit(s) of product {product_id}, cannot remove {quantity}")
+        return None
+
+    searched_product = read_product(storage, product_id)
+
+    update_product(
+        storage,
+        product_names,
+        product_id,
+        {QUANTITY_KEY : searched_product[QUANTITY_KEY] + quantity}
+    )
+
+    cart_quantity -= quantity  
+    cart[product_id] = cart_quantity
+
+    if not cart_quantity:
+        del cart[product_id]
+
+    return cart_quantity
