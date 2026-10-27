@@ -203,5 +203,11 @@ def delete_product(
         product carried that identifier (``storage`` and ``product_names``
         are left unchanged and a message is printed).
     """
-    # TODO: реализуйте функцию
-    return ""
+    if product_id not in storage:
+        print(f"no product with id {product_id}")
+        return None
+
+    del storage[product_id]
+    product_names.remove(storage[product_id][NAME_KEY])
+
+    return product_id
