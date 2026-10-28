@@ -87,9 +87,9 @@ def create_product(
     product_id = generate_product_id()
 
     storage[product_id] = {
-        NAME_KEY : name,
-        PRICE_KEY : normalize_price(price),
-        QUANTITY_KEY : quantity
+        NAME_KEY: name,
+        PRICE_KEY: normalize_price(price),
+        QUANTITY_KEY: quantity,
     }
 
     product_names.add(name)

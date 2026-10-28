@@ -28,18 +28,18 @@ prints a distinct "arguments are invalid" notice. Either way the store
 is left untouched and the loop keeps running; only ``exit`` stops it.
 """
 
-from decimal import Decimal, InvalidOperation  # noqa: F401
 import re
+from decimal import Decimal, InvalidOperation
 from typing import Final
 
-from crud import (  # noqa: F401
+from .crud import (
     create_product,
     delete_product,
     read_product,
     update_product,
 )
-from storage import NAME_KEY, PRICE_KEY, QUANTITY_KEY, Product  # noqa: F401
-from utils import get_storage_str_representation  # noqa: F401
+from .storage import NAME_KEY, PRICE_KEY, QUANTITY_KEY, Product
+from .utils import get_storage_str_representation
 
 
 # TODO: задайте приглашение и текст справки (используйте своё решение части 3)
@@ -115,43 +115,64 @@ def run_command(
             return True
         case ["create", *name, price, quantity]:
             print_result(
-                create_product(storage, product_names, 
-                    {NAME_KEY : " ".join(name), 
-                     PRICE_KEY : Decimal(price), 
-                     QUANTITY_KEY : int(quantity)
-                })
+                create_product(
+                    storage,
+                    product_names,
+                    {
+                        NAME_KEY: " ".join(name),
+                        PRICE_KEY: Decimal(price),
+                        QUANTITY_KEY: int(quantity),
+                    },
+                )
             )
             return True
-        
+
         case ["read", id]:
             print_result(read_product(storage, id))
             return True
-        case ["update", id, *name, price, quantity] if \
-            bool(re.match(r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price)):
+        case ["update", id, *name, price, quantity] if bool(
+            re.match(r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price)
+        ):
             print_result(
-                update_product(storage, product_names, id,
-                    {NAME_KEY : " ".join(name), 
-                     PRICE_KEY : Decimal(price), 
-                     QUANTITY_KEY : int(quantity)
-                })
+                update_product(
+                    storage,
+                    product_names,
+                    id,
+                    {
+                        NAME_KEY: " ".join(name),
+                        PRICE_KEY: Decimal(price),
+                        QUANTITY_KEY: int(quantity),
+                    },
+                )
             )
             return True
-        case ["update", id, *name, price] if \
-            bool(re.match(r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price)):
+        case ["update", id, *name, price] if bool(
+            re.match(r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price)
+        ):
             print_result(
-                update_product(storage, product_names, id,
-                    {NAME_KEY : " ".join(name), 
-                        PRICE_KEY : Decimal(price), 
-                })
+                update_product(
+                    storage,
+                    product_names,
+                    id,
+                    {
+                        NAME_KEY: " ".join(name),
+                        PRICE_KEY: Decimal(price),
+                    },
+                )
             )
             return True
         case ["update", id, *name]:
-                    print_result(
-                        update_product(storage, product_names, id,
-                            {NAME_KEY : " ".join(name), 
-                        })
-                    )
-                    return True
+            print_result(
+                update_product(
+                    storage,
+                    product_names,
+                    id,
+                    {
+                        NAME_KEY: " ".join(name),
+                    },
+                )
+            )
+            return True
         case ["delete", id]:
             print_result(delete_product(storage, product_names, id))
             return True

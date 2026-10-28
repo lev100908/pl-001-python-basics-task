@@ -9,9 +9,9 @@ Like the CRUD layer, the failure path never raises -- the operation prints
 an explanatory message to stdout and returns ``None``.
 """
 
-from .storage import Product, QUANTITY_KEY
-
 from .crud import read_product, update_product
+from .storage import QUANTITY_KEY, Product
+
 
 def add_to_cart(
     storage: dict[str, Product],
@@ -52,17 +52,14 @@ def add_to_cart(
     storage_quantity = searched_product[QUANTITY_KEY]
 
     if storage_quantity < quantity:
-        print(f"not enough stock for product {product_id}: {storage_quantity} available, {quantity} requested")
+        print(
+            f"not enough stock for product {product_id}: {storage_quantity} available, {quantity} requested"
+        )
         return None
 
     storage_quantity -= quantity
 
-    update_product(
-        storage,
-        product_names,
-        product_id,
-        {QUANTITY_KEY : storage_quantity}
-    )
+    update_product(storage, product_names, product_id, {QUANTITY_KEY: storage_quantity})
 
     cart[product_id] = cart.get(product_id, 0) + quantity
 
@@ -108,21 +105,26 @@ def remove_from_cart(
         return None
 
     cart_quantity = cart[product_id]
-    
+
     if cart_quantity < quantity:
-        print(f"cart holds only {cart_quantity} unit(s) of product {product_id}, cannot remove {quantity}")
+        print(
+            f"cart holds only {cart_quantity} unit(s) of product {product_id}, cannot remove {quantity}"
+        )
         return None
 
     searched_product = read_product(storage, product_id)
+
+    if not searched_product:
+        return None
 
     update_product(
         storage,
         product_names,
         product_id,
-        {QUANTITY_KEY : searched_product[QUANTITY_KEY] + quantity}
+        {QUANTITY_KEY: searched_product[QUANTITY_KEY] + quantity},
     )
 
-    cart_quantity -= quantity  
+    cart_quantity -= quantity
     cart[product_id] = cart_quantity
 
     if not cart_quantity:

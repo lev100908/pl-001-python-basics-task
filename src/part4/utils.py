@@ -18,8 +18,8 @@ Presentation:
   the longest value it holds in that particular call.
 """
 
-from decimal import ROUND_HALF_UP, Decimal
 import re
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Final
 
 from .storage import (
@@ -90,7 +90,7 @@ def get_storage_str_representation(storage: dict[str, Product]) -> str:
     columns_values: list[list[str]] = [
         [column_header] for column_header in TABLE_HEADERS
     ]
-    
+
     for product_id, product in storage.items():
         column_fields = (product_id, *product.values())
         for col_ind in range(len(column_fields)):
@@ -113,7 +113,9 @@ def get_storage_str_representation(storage: dict[str, Product]) -> str:
     for row_ind in range(1, len(storage) + 1):
         output_str += "|"
         for col_ind in range(len(columns_values)):
-            output_str += f" {f'{columns_values[col_ind][row_ind]}':<{width_columns[col_ind]}} |"
+            output_str += (
+                f" {f'{columns_values[col_ind][row_ind]}':<{width_columns[col_ind]}} |"
+            )
         output_str += "\n"
 
     return output_str.removesuffix("\n")
