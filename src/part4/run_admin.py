@@ -42,7 +42,6 @@ from .storage import NAME_KEY, PRICE_KEY, QUANTITY_KEY, Product
 from .utils import get_storage_str_representation
 
 
-# TODO: задайте приглашение и текст справки (используйте своё решение части 3)
 PROMPT: Final[str] = "admin> "
 HELP_TEXT: Final[str] = """Available commands:
   help                                       show this message
@@ -51,6 +50,8 @@ HELP_TEXT: Final[str] = """Available commands:
   create <name...> <price> <quantity>        add a product, print its new id
   read <id>                                  print the product with that id
   update <id> <name...> <price> <quantity>   overwrite that product's fields
+  update <id> <name...> <price>              overwrite that product's fields
+  update <id> <name...>                      overwrite that product's fields
   delete <id>                                remove the product with that id
 
 For create and update the price and quantity are the last two words of the
@@ -130,8 +131,8 @@ def run_command(
         case ["read", id]:
             print_result(read_product(storage, id))
             return True
-        case ["update", id, *name, price, quantity] if bool(
-            re.match(r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price)
+        case ["update", id, *name, price, quantity] if re.match(
+            r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price
         ):
             print_result(
                 update_product(
@@ -146,8 +147,8 @@ def run_command(
                 )
             )
             return True
-        case ["update", id, *name, price] if bool(
-            re.match(r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price)
+        case ["update", id, *name, price] if re.match(
+            r"(([1-9][0-9]*|0)[.][0-9]*)|([1-9][0-9]*)", price
         ):
             print_result(
                 update_product(
