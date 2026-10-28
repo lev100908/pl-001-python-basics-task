@@ -13,10 +13,6 @@ from .storage import Product, QUANTITY_KEY
 
 from .crud import read_product, update_product
 
-
-# TODO: при необходимости добавьте свои вспомогательные функции
-
-
 def add_to_cart(
     storage: dict[str, Product],
     product_names: set[str],
@@ -50,6 +46,9 @@ def add_to_cart(
     """
     searched_product = read_product(storage, product_id)
 
+    if not searched_product:
+        return None
+
     storage_quantity = searched_product[QUANTITY_KEY]
 
     if storage_quantity < quantity:
@@ -65,7 +64,7 @@ def add_to_cart(
         {QUANTITY_KEY : storage_quantity}
     )
 
-    cart[product_id] = cart.get(cart[product_id], 0) + quantity
+    cart[product_id] = cart.get(product_id, 0) + quantity
 
     return cart[product_id]
 
@@ -106,6 +105,7 @@ def remove_from_cart(
 
     if product_id not in cart:
         print(f"product {product_id} is not in the cart")
+        return None
 
     cart_quantity = cart[product_id]
     
